@@ -1,36 +1,46 @@
 package alex.wordgeneratorproject;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class MyActivity extends Activity {
+
+    NewWord newWord;
+    EditText newWordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        TextView infoTextView = (TextView)findViewById(R.id.textView);
+        //sets some information to the help textView
+        infoTextView.setText("Tip!\n" +
+                "This is a test program.\n" +
+                "It generates a new random word with random letters.\n" +
+                "Free to use.");
+         newWord = new NewWord();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
-        return true;
+    public void buttonGenerateClick(View view)
+    {
+        newWordEditText = (EditText)findViewById(R.id.editText);
+        newWord.generate();
+        newWordEditText.setText("");
+        newWordEditText.setText(newWord.toString());
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void buttonCopyClick(View view)
+    {
+        newWordEditText = (EditText)findViewById(R.id.editText);
+        String textToBuffer = newWordEditText.getText().toString();
+        ClipboardManager clipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("label", textToBuffer);
+        clipboard.setPrimaryClip(clipData);
     }
 }
